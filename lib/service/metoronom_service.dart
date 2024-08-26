@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:audio_service/audio_service.dart';
+import 'package:audio_session/audio_session.dart';
 import 'package:flutter/services.dart';
 import 'package:soundpool/soundpool.dart';
 
@@ -32,17 +33,32 @@ class MetoronomService extends BaseAudioHandler {
     options: const SoundpoolOptions(),
   );
 
-  Future _play(int bpm) async {
-    final soundID = await rootBundle
+  int? soundID;
+
+  Future setAudio() async {
+    final session = await AudioSession.instance;
+    await session.configure(const AudioSessionConfiguration.speech());
+    final item = MediaItem(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      album: 'Album name',
+      title: 'Track title',
+      artist: 'Artist name',
+    );
+    addQueueItem(item);
+    soundID = await rootBundle
         .load("assets/audio/wood.wav")
         .then((ByteData soundData) {
       return pool.load(soundData);
     });
-    print(soundID);
+  }
+
+  Future _play(int bpm) async {
     final intervalMilSec = 60000 ~/ bpm;
     stop();
     _timer = Timer.periodic(Duration(milliseconds: intervalMilSec), (_) {
-      pool.play(soundID);
+      if (soundID != null) {
+        pool.play(soundID!);
+      }
       print(soundID);
     });
   }

@@ -13,6 +13,7 @@ class RunController extends GetxController {
 
   @override
   void onReady() async {
+    await metoronomService.setAudio();
     final isEnable = await geoService.requestPermission();
     if (isEnable) {
       final currentPosition = await geoService.requestCurrentPosition();

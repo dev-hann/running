@@ -17,6 +17,7 @@ dependencies:
   geolocator: ^13.0.1
   soundpool: ^2.4.1
   audio_service: ^0.18.15
+  audio_session: ^0.1.21
 
 dev_dependencies:
   flutter_test:
