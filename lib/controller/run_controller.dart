@@ -6,7 +6,7 @@ import 'package:runner/service/geo_service.dart';
 import 'package:runner/service/metoronom_service.dart';
 
 class RunController extends GetxController {
-  final metoronomService = MetoronomService();
+  final metoronomService = MetoronomService.instance;
   final geoService = GeoService();
   bool isMetronomePlaying = false;
   LatLng? currentPosition;
@@ -35,7 +35,7 @@ class RunController extends GetxController {
 
   void playMetronome() {
     isMetronomePlaying = true;
-    metoronomService.play(170);
+    metoronomService.play();
   }
 
   void stopMetronome() {

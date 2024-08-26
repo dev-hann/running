@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:runner/service/metoronom_service.dart';
 import 'package:runner/view/hom_view.dart';
 
 Future<void> main() async {
+  await MetoronomService.instance.init();
   runApp(const MyApp());
 }
 

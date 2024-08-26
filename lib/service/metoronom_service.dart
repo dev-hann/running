@@ -1,9 +1,27 @@
 import 'dart:async';
 
+import 'package:audio_service/audio_service.dart';
 import 'package:flutter/services.dart';
 import 'package:soundpool/soundpool.dart';
 
-class MetoronomService {
+class MetoronomService extends BaseAudioHandler {
+  MetoronomService._();
+
+  static final _instance = MetoronomService._();
+  static MetoronomService get instance {
+    return _instance;
+  }
+
+  Future init() {
+    return AudioService.init(
+      builder: () => this,
+      config: const AudioServiceConfig(
+        androidNotificationChannelId: 'com.dev_hann.running.audio',
+        androidNotificationChannelName: 'Music playback',
+      ),
+    );
+  }
+
   Timer? _timer;
 
   bool get isPlaying {
@@ -14,7 +32,7 @@ class MetoronomService {
     options: const SoundpoolOptions(),
   );
 
-  Future play(int bpm) async {
+  Future _play(int bpm) async {
     final soundID = await rootBundle
         .load("assets/audio/wood.wav")
         .then((ByteData soundData) {
@@ -29,8 +47,23 @@ class MetoronomService {
     });
   }
 
-  void stop() {
+  void _stop() {
     _timer?.cancel();
     _timer == null;
+  }
+
+  @override
+  Future<void> play() {
+    return _play(170);
+  }
+
+  @override
+  Future<void> pause() async {
+    return _stop();
+  }
+
+  @override
+  Future<void> stop() async {
+    return _stop();
   }
 }
