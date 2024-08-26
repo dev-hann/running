@@ -1,28 +1,25 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:reliable_interval_timer/reliable_interval_timer.dart';
+import 'package:just_audio/just_audio.dart';
 
 class MetoronomService {
-  ReliableIntervalTimer? _timer;
+  Timer? _timer;
 
   bool get isPlaying {
-    return _timer?.isRunning ?? false;
+    return _timer?.isActive ?? false;
   }
 
   Future play(int bpm) async {
     final intervalMilSec = 60000 ~/ bpm;
     stop();
-    ReliableIntervalTimer(
-      interval: Duration(milliseconds: intervalMilSec),
-      callback: (elapsedMilliseconds) {
-        SystemSound.play(SystemSoundType.click);
-      },
-    );
+    _timer = Timer.periodic(Duration(milliseconds: intervalMilSec), (_) {
+      SystemSound.play(SystemSoundType.click);
+    });
   }
 
   void stop() {
-    _timer?.stop();
+    _timer?.cancel();
     _timer == null;
   }
 }
