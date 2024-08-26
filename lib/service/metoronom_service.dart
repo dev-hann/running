@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:just_audio/just_audio.dart';
+import 'package:soundpool/soundpool.dart';
 
 class MetoronomService {
   Timer? _timer;
@@ -10,11 +10,22 @@ class MetoronomService {
     return _timer?.isActive ?? false;
   }
 
+  final pool = Soundpool.fromOptions(
+    options: const SoundpoolOptions(),
+  );
+
   Future play(int bpm) async {
+    final soundID = await rootBundle
+        .load("assets/audio/wood.wav")
+        .then((ByteData soundData) {
+      return pool.load(soundData);
+    });
+    print(soundID);
     final intervalMilSec = 60000 ~/ bpm;
     stop();
     _timer = Timer.periodic(Duration(milliseconds: intervalMilSec), (_) {
-      SystemSound.play(SystemSoundType.click);
+      pool.play(soundID);
+      print(soundID);
     });
   }
 
