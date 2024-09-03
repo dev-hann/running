@@ -2,8 +2,7 @@ import 'dart:async';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:audio_session/audio_session.dart';
-import 'package:flutter/services.dart';
-import 'package:soundpool/soundpool.dart';
+import 'package:metronome/metronome.dart';
 
 class MetoronomService extends BaseAudioHandler {
   MetoronomService._();
@@ -23,17 +22,7 @@ class MetoronomService extends BaseAudioHandler {
     );
   }
 
-  Timer? _timer;
-
-  bool get isPlaying {
-    return _timer?.isActive ?? false;
-  }
-
-  final pool = Soundpool.fromOptions(
-    options: const SoundpoolOptions(),
-  );
-
-  int? soundID;
+  final metronome = Metronome();
 
   Future setAudio() async {
     final session = await AudioSession.instance;
@@ -45,27 +34,14 @@ class MetoronomService extends BaseAudioHandler {
       artist: 'Artist name',
     );
     addQueueItem(item);
-    soundID = await rootBundle
-        .load("assets/audio/wood.wav")
-        .then((ByteData soundData) {
-      return pool.load(soundData);
-    });
   }
 
   Future _play(int bpm) async {
-    final intervalMilSec = 60000 ~/ bpm;
-    stop();
-    _timer = Timer.periodic(Duration(milliseconds: intervalMilSec), (_) {
-      if (soundID != null) {
-        pool.play(soundID!);
-      }
-      print(soundID);
-    });
+    await metronome.play(bpm);
   }
 
-  void _stop() {
-    _timer?.cancel();
-    _timer == null;
+  Future<bool> _stop() {
+    return metronome.stop();
   }
 
   @override
@@ -75,11 +51,11 @@ class MetoronomService extends BaseAudioHandler {
 
   @override
   Future<void> pause() async {
-    return _stop();
+    await _stop();
   }
 
   @override
   Future<void> stop() async {
-    return _stop();
+    await _stop();
   }
 }

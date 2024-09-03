@@ -15,14 +15,22 @@ dependencies:
   flutter_map: ^7.0.2
   latlong2: ^0.9.1
   geolocator: ^13.0.1
-  soundpool: ^2.4.1
   audio_service: ^0.18.15
   audio_session: ^0.1.21
+  fpdart:
+  metronome:
+    git:
+      url: https://github.com/dev-hann/metronome.git
+  freezed:
+  freezed_annotation: ^2.4.4
+  json_annotation: ^4.9.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
+  build_runner: ^2.4.12
+  json_serializable: ^6.8.0
 
 flutter:
   uses-material-design: true
