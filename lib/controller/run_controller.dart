@@ -7,7 +7,7 @@ import 'package:runner/service/geo_service.dart';
 import 'package:runner/service/metoronom_service.dart';
 
 class RunController extends GetxController {
-  final metoronomService = MetoronomService.instance;
+  final metoronomService = MetoronomService();
   final geoService = GeoService();
   RunState state = RunState();
   LatLng? currentPosition;

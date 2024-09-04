@@ -3,7 +3,7 @@ import 'package:runner/model/metronome_state.dart';
 import 'package:runner/service/metoronom_service.dart';
 
 class MetronomeController extends GetxController {
-  final metoronomService = MetoronomService.instance;
+  final metoronomService = MetoronomService();
 
   MetronomeState state = const MetronomeState();
 
@@ -43,7 +43,7 @@ class MetronomeController extends GetxController {
     _updateState(
       state.copyWith(isPlaying: true),
     );
-    return metoronomService.play();
+    return metoronomService.play(state.bpm);
   }
 
   Future stopMetronome() {

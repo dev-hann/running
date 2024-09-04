@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:runner/controller/metronome_controller.dart';
 import 'package:runner/controller/run_controller.dart';
 import 'package:runner/view/metronome_view.dart';
-import 'package:runner/widget/record_map.dart';
 
 class RunningView extends StatefulWidget {
   const RunningView({

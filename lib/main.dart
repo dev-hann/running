@@ -4,7 +4,7 @@ import 'package:runner/service/metoronom_service.dart';
 import 'package:runner/view/hom_view.dart';
 
 Future<void> main() async {
-  await MetoronomService.instance.init();
+  await MetoronomService.init();
   runApp(const MyApp());
 }
 
