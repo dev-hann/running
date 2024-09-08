@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:runner/controller/metronome_controller.dart';
-import 'package:runner/controller/run_controller.dart';
+import 'package:runner/controller/record_controller.dart';
 import 'package:runner/view/metronome_view.dart';
+import 'package:runner/widget/record_map.dart';
 
 class RunningView extends StatefulWidget {
   const RunningView({
@@ -14,24 +15,55 @@ class RunningView extends StatefulWidget {
 }
 
 class _RunningViewState extends State<RunningView> {
-  final runController = Get.put(RunController());
-  final metrononeController = Get.put(MetronomeController());
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: GetBuilder<RunController>(
-        builder: (controller) {
-          final state = controller.state;
-          return Column(
+    return GetBuilder<RecordController>(
+      builder: (controller) {
+        final runState = controller.state;
+        return Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              onPressed: () {
+                controller.stopTimer();
+                controller.stopRecord();
+                Get.back();
+              },
+              icon: const Icon(Icons.arrow_back_ios),
+            ),
+          ),
+          body: Column(
             children: [
-              Text("Timer: 00:00"),
-              Text("Distance: 0.0 km"),
-              const Card(
+              SizedBox(
+                height: Get.width / 1.5,
+                child: Builder(
+                  builder: (context) {
+                    final postion = runState.currentPosition;
+                    if (postion == null) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    return RecordMap(
+                      position: postion,
+                    );
+                  },
+                ),
+              ),
+              Text("Timer: ${runState.duration}"),
+              const Text("Distance: 0.0 km"),
+              Card(
                 child: ListTile(
-                  title: Text("Run!"),
-                  trailing: Icon(Icons.play_arrow),
+                  onTap: () {
+                    if (runState.isRecording) {
+                      controller.stopRecord();
+                      controller.stopTimer();
+                    } else {
+                      controller.initRecord();
+                      controller.initTimer();
+                    }
+                  },
+                  title: Text(!runState.isRecording ? "Run!" : "Stop"),
+                  trailing: const Icon(Icons.play_arrow),
                 ),
               ),
               const SizedBox(height: 16.0),
@@ -62,9 +94,9 @@ class _RunningViewState extends State<RunningView> {
                 ),
               ),
             ],
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }
